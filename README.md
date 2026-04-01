@@ -22,7 +22,7 @@ export QASE_API_TOKEN=your_token_here
 
 **Or inline with any command:**
 ```bash
-python qase_manage.py <command> --project SLES --token your_token_here
+python qase_manage.py <command> --project XXX --token your_token_here
 ```
 
 The `--project` and `--token` arguments can appear anywhere in the command line, in any order.
@@ -35,14 +35,14 @@ The `--project` and `--token` arguments can appear anywhere in the command line,
 List all test suites in the project.
 
 ```bash
-python qase_manage.py list-suites --project SLES
+python qase_manage.py list-suites --project XXX
 ```
 
 **Output:**
 ```
 ID       Parent ID    Title
 --------------------------------------------------
-5        -            Systemd MCP Tests
+5        -            Tests
 6        5            Unit Tests
 7        5            Integration Tests
 ```
@@ -54,10 +54,10 @@ List all test cases in the project. Optionally filter by suite.
 
 ```bash
 # All cases
-python qase_manage.py list-cases --project SLES
+python qase_manage.py list-cases --project XXX
 
 # Cases in a specific suite
-python qase_manage.py list-cases --project SLES --id 6
+python qase_manage.py list-cases --project XXX --id 6
 ```
 
 | Argument | Required | Description        |
@@ -78,7 +78,7 @@ ID       Suite ID     Priority     Title
 Show full details of a single suite.
 
 ```bash
-python qase_manage.py info-suite --project SLES --id 5
+python qase_manage.py info-suite --project XXX --id 5
 ```
 
 | Argument | Required | Description |
@@ -90,9 +90,9 @@ python qase_manage.py info-suite --project SLES --id 5
 Suite details
 ----------------------------------------
   ID          : 5
-  Title       : Systemd MCP Tests
+  Title       : Tests
   Parent ID   : -
-  Description : Top-level suite for all systemd-mcp tests
+  Description : Top-level suite for all whatever tests
   Cases count : 4
   Created     : 2024-01-15T10:00:00Z
   Updated     : 2024-01-15T10:00:00Z
@@ -104,7 +104,7 @@ Suite details
 Show full details of a single test case, including steps.
 
 ```bash
-python qase_manage.py info-case --project SLES --id 42
+python qase_manage.py info-case --project XXX --id 42
 ```
 
 | Argument | Required | Description  |
@@ -120,13 +120,13 @@ Test case details
   Suite ID      : 6
   Priority      : high
   Severity      : critical
-  Description   : Run unit-test.bats and verify all tests pass
-  Preconditions : systemd-mcp is installed and bats is available
+  Description   : Run unit tests and verify all tests pass
+  Preconditions : whatever is installed and bats is available
   Expected      : All bats tests exit with code 0
   Created       : 2024-01-15T10:00:00Z
   Updated       : 2024-01-15T10:00:00Z
   Steps:
-    1. Run bats unit-test.bats -> TAP output shows all tests passing
+    1. Run unit tests -> TAP output shows all tests passing
 ```
 
 ---
@@ -136,10 +136,10 @@ Create a new test suite. Skips silently if a suite with the same title already e
 
 ```bash
 # Top-level suite
-python qase_manage.py create-suite --project SLES --title "Systemd MCP Tests"
+python qase_manage.py create-suite --project XXX --title "Tests"
 
 # Nested suite under a parent
-python qase_manage.py create-suite --project SLES --title "Unit Tests" --parent-id 5
+python qase_manage.py create-suite --project XX --title "Unit Tests" --parent-id 5
 ```
 
 | Argument        | Required | Description                   |
@@ -155,15 +155,15 @@ Create a new test case. Skips silently if a case with the same title already exi
 
 ```bash
 # Minimal
-python qase_manage.py create-case --project SLES --title "Verify service starts"
+python qase_manage.py create-case --project XXX --title "Verify service starts"
 
 # Full
-python qase_manage.py create-case --project SLES \
+python qase_manage.py create-case --project XXX \
     --title "Verify service starts" \
     --suite-id 6 \
     --priority high \
     --severity critical \
-    --description "Check systemd service starts correctly" \
+    --description "Check whatever service starts correctly" \
     --preconditions "Service is installed" \
     --expected "Service is active and running"
 ```
@@ -185,10 +185,10 @@ Mark a test case as passed or failed. Internally, this creates a test run for th
 
 ```bash
 # Pass
-python qase_manage.py set-result --project SLES --id 42 --status passed
+python qase_manage.py set-result --project XXX --id 42 --status passed
 
 # Fail with a comment
-python qase_manage.py set-result --project SLES --id 42 --status failed \
+python qase_manage.py set-result --project XXX --id 42 --status failed \
     --comment "Service did not start within timeout"
 ```
 
@@ -213,7 +213,7 @@ These can be placed anywhere in the command line, before or after the subcommand
 
 | Argument    | Description                                             |
 |-------------|---------------------------------------------------------|
-| `--project` | Qase project code (e.g. `SLES`). **Required.**          |
+| `--project` | Qase project code (e.g. `XXX`). **Required.**          |
 | `--token`   | Qase API token. Falls back to `QASE_API_TOKEN` env var. |
 
 ---
@@ -224,17 +224,17 @@ These can be placed anywhere in the command line, before or after the subcommand
 export QASE_API_TOKEN=your_token_here
 
 # 1. See what suites exist
-python qase_manage.py list-suites --project SLES
+python qase_manage.py list-suites --project XXX
 
 # 2. Create a suite and note the returned ID
-python qase_manage.py create-suite --project SLES --title "Systemd MCP Tests"
-# Created suite: 'Systemd MCP Tests' (ID: 5)
+python qase_manage.py create-suite --project XXX --title "Tests"
+# Created suite: 'Tests' (ID: 5)
 
 # 3. Create a test case inside it
-python qase_manage.py create-case --project SLES \
+python qase_manage.py create-case --project XXX \
     --title "Unit test suite passes" --suite-id 5 --priority high
 # Created case: 'Unit test suite passes' (ID: 42)
 
 # 4. Run your tests, then report the result
-python qase_manage.py set-result --project SLES --id 42 --status passed
+python qase_manage.py set-result --project XXX --id 42 --status passed
 ```
